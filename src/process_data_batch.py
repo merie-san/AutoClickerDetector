@@ -37,7 +37,7 @@ with (open("training_clicks.csv", newline='') as rf, open("training_batch.csv", 
             mean_y += float(dicts[j + i]['starting y'])
             mean_r += float(dicts[j + i]['movement module'])
             mean_a += float(dicts[j + i]['movement angle'])
-            if dicts[j + i]['mouse button'] == 'left':
+            if dicts[j + i]['mouse button'] == 'Button.left':
                 left_ratio += 1
             if dicts[j + i]['is abnormal'] == 'True':
                 n_abnormal += 1
