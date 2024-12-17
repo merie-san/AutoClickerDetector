@@ -3,7 +3,6 @@ import ctypes
 import csv
 import time
 import autoclicker
-from tkinter import messagebox
 from tkinter import *
 
 PROCESS_PER_MONITOR_DPI_AWARE = 2
