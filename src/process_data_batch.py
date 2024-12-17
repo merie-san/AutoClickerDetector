@@ -1,5 +1,6 @@
 import csv
 import math
+from math import atan2
 
 with (open("training_clicks.csv", newline='') as rf, open("training_batch.csv", "w", newline='') as wf):
     reader = csv.DictReader(rf)
@@ -14,6 +15,8 @@ with (open("training_clicks.csv", newline='') as rf, open("training_batch.csv", 
     for i in range(len(dicts) - 10):
 
         TTNC = []
+        mouse_mov_x = []
+        mouse_mov_y = []
         mouse_mov_r = []
         mouse_mov_a = []
         mean_dur = 0
@@ -26,12 +29,10 @@ with (open("training_clicks.csv", newline='') as rf, open("training_batch.csv", 
 
         for j in range(10):
             TTNC.append(float(dicts[j + i + 1]['starting time']) - float(dicts[j + i]['starting time']))
-            mouse_mov_r.append(
-                math.sqrt((float(dicts[j + i + 1]['starting x']) - float(dicts[j + i]['starting x'])) ** 2 + (
-                        float(dicts[j + i + 1]['starting y']) - float(dicts[j + i]['starting y'])) ** 2))
-            mouse_mov_a.append(
-                math.atan2(float(dicts[j + i + 1]['starting y']) - float(dicts[j + i]['starting y']),
-                           float(dicts[j + i + 1]['starting x']) - float(dicts[j + i]['starting x'])))
+            mouse_mov_x.append(float(dicts[j + i + 1]['starting x']) - float(dicts[j + i]['starting x']))
+            mouse_mov_y.append(float(dicts[j + i + 1]['starting y']) - float(dicts[j + i]['starting y']))
+            mouse_mov_r.append(math.hypot(mouse_mov_x[j], mouse_mov_y[j]))
+            mouse_mov_a.append(math.atan2(mouse_mov_y[j], mouse_mov_x[j]))
             mean_dur += float(dicts[j + i]['duration'])
             mean_x += float(dicts[j + i]['starting x'])
             mean_y += float(dicts[j + i]['starting y'])
@@ -42,8 +43,10 @@ with (open("training_clicks.csv", newline='') as rf, open("training_batch.csv", 
             if dicts[j + i]['is abnormal'] == 'True':
                 n_abnormal += 1
 
-        mean_mov_r = sum(mouse_mov_r) / len(mouse_mov_r)
-        mean_mov_a = sum(mouse_mov_a) / len(mouse_mov_a)
+        mean_mov_x = sum(mouse_mov_x) / len(mouse_mov_x)
+        mean_mov_y = sum(mouse_mov_y) / len(mouse_mov_y)
+        mean_mov_r = math.hypot(mean_mov_x, mean_mov_y)
+        mean_mov_a = math.atan2(mean_mov_y, mean_mov_x)
         mean_TTNC = sum(TTNC) / len(TTNC)
         mean_dur = mean_dur / 10
         mean_x = mean_x / 10
