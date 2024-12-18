@@ -52,7 +52,7 @@ class AutoClicker:
 
 
 def main():
-    AutoClicker().quicker_clicks(Button.left, 50, 5, 0.9)
+    AutoClicker().circumference_clicks(Button.left, 50, 100, 0.5)
 
 
 if __name__ == "__main__":
