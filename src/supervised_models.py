@@ -18,7 +18,7 @@ samples = data_frame.drop(["abnormal activity"], axis=1)
 array_labels = labels.to_numpy()
 array_samples = samples.to_numpy()
 scores = []
-sample_train, sample_test, label_train, label_test = train_test_split(array_samples, array_labels, test_size=0.33)
+sample_train, sample_test, label_train, label_test = train_test_split(array_samples, array_labels, test_size=0.33, random_state=42)
 
 if not os.path.exists("scaler.pkl"):
     scaler = StandardScaler()
@@ -51,7 +51,7 @@ else:
         ada_boost_cls = pickle.load(g)
 
 if not os.path.exists("mlp_cls.pkl"):
-    mlp_classifier = MLPClassifier(hidden_layer_sizes=[30, 30, 30, 15], learning_rate="adaptive", max_iter=2000)
+    mlp_classifier = MLPClassifier(hidden_layer_sizes=[30,10], learning_rate="adaptive", max_iter=2000)
     mlp_classifier.fit(sample_train, label_train)
     with open("mlp_cls.pkl", "wb") as h:
         pickle.dump(mlp_classifier, h)

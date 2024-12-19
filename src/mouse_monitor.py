@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter.ttk import *
 def end(*args):
     pass
+
 root=Tk()
 root.title("Autoclicker Detector")
 mainframe=ttk.Frame(root, padding="8 8 8 8")
