@@ -8,6 +8,7 @@ import data_processor
 import machine_learning_model
 from tkinter import messagebox
 
+
 def halt(model: machine_learning_model.MachineLearningModel, processor: data_processor.DataProcessor,
          monitor: mouse_monitor.MouseMonitor):
     monitor.stop()
@@ -33,19 +34,23 @@ def terminate(root, model: machine_learning_model.MachineLearningModel, processo
 
 def autoclicker_status_changed(bool_var: tkinter.BooleanVar, string_val: tkinter.StringVar, label: tkinter.Label):
     if bool_var.get():
+        previous_val = string_val.get()
         string_val.set("Detected")
         label.configure(foreground="red")
-        messagebox.showwarning("Autoclicker Detector", "Autoclicker detected")
+        if not previous_val == "Detected":
+            messagebox.showwarning("Autoclicker Detector", "Autoclicker detected")
     else:
         string_val.set("None")
         label.configure(foreground="green")
 
 
-def button_pressed(string_val: tkinter.StringVar, model: machine_learning_model.MachineLearningModel,
+def button_pressed(string_val: tkinter.StringVar, bool_val: tkinter.BooleanVar,
+                   model: machine_learning_model.MachineLearningModel,
                    processor: data_processor.DataProcessor, monitor: mouse_monitor.MouseMonitor, ):
     if string_val.get() == "Stop":
         string_val.set("Restart")
         halt(model, processor, monitor)
+        bool_val.set(False)
     else:
         string_val.set("Stop")
         restart(model, processor, monitor)
@@ -59,7 +64,7 @@ def main():
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
     n_clicks_checked = IntVar()
-    n_clicks=IntVar()
+    n_clicks = IntVar()
     autoclicker_activity = BooleanVar()
     raw_data_queue = Queue()
     proc_data_queue = Queue()
@@ -73,19 +78,21 @@ def main():
     lbl1.grid(column=1, row=1, padx=5, pady=5)
     lbl2 = ttk.Label(mainframe, text="clicks have been checked in")
     lbl2.grid(column=2, row=1, padx=5, pady=5)
-    lbl5=ttk.Label(mainframe, textvariable=n_clicks)
+    lbl5 = ttk.Label(mainframe, textvariable=n_clicks)
     lbl5.grid(column=3, row=1, padx=5, pady=5)
     lbl3 = ttk.Label(mainframe, text="autoclicker activity:")
     lbl3.grid(column=1, row=2, padx=5, pady=5)
     lbl4 = ttk.Label(mainframe, textvariable=autoclicker_activity_describer, foreground="green")
     lbl4.grid(column=2, row=2, padx=5, pady=5)
     button = ttk.Button(mainframe, textvariable=button_describer,
-                        command=lambda: button_pressed(button_describer, model, processor, monitor, ))
+                        command=lambda: button_pressed(button_describer, autoclicker_activity, model, processor,
+                                                       monitor))
     button.grid(column=3, row=3, padx=5, pady=5)
     autoclicker_activity.trace_add(mode="write",
                                    callback=lambda name, index, mode:
-                                   autoclicker_status_changed(autoclicker_activity, autoclicker_activity_describer, lbl4))
-    root.bind("<Escape>", func=lambda event: terminate(root, model, processor, monitor))
+                                   autoclicker_status_changed(autoclicker_activity, autoclicker_activity_describer,
+                                                              lbl4))
+    root.bind("<Escape>", func=lambda event: terminate(root, model, processor, monitor, button_describer))
     root.resizable(False, False)
     root.protocol("WM_DELETE_WINDOW", func=lambda: terminate(root, model, processor, monitor, button_describer))
 
