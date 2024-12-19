@@ -1,25 +1,28 @@
-from tkinter import ttk
-from tkinter import *
-import tkinter as tk
-from tkinter.ttk import *
-def end(*args):
-    pass
+from queue import Queue
 
-root=Tk()
-root.title("Autoclicker Detector")
-mainframe=ttk.Frame(root, padding="8 8 8 8")
-mainframe.grid(column=0, row=0)
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-n_clicks=StringVar()
-sus_level=StringVar()
-ttk.Label(mainframe, textvariable=n_clicks).grid(column=1, row=1)
-ttk.Label(mainframe, text="clicks have been checked").grid(column=2, row=1)
-ttk.Label(mainframe, text="autoclicker activity:").grid(column=1, row=2)
-ttk.Label(mainframe, textvariable=sus_level).grid(column=2, row=2)
-ttk.Button(mainframe, text="Quit", command=end).grid(column=3, row=3)
-for child in mainframe.winfo_children():
-    child.grid_configure(padx=5, pady=5)
-root.bind("<Return>", end)
-root.resizable(False, False)
-root.mainloop()
+import pynput
+from pynput import mouse
+import threading
+import time
+import tkinter
+
+class MouseMonitor:
+
+    def __init__(self, queue: Queue, n_clicks:tkinter.IntVar):
+        self.queue = queue
+        self.listener = mouse.Listener(on_click=self.on_click)
+        self.n_clicks = n_clicks
+
+    def on_click(self, x, y, button, pressed):
+        data_row = {'time': time.time(), 'x': x, 'y': y, 'button': button, 'pressed': pressed}
+        self.queue.put(data_row)
+        if not pressed:
+            self.n_clicks.set(self.n_clicks.get() + 1)
+        print("monitor activity "+str(time.time()))
+
+    def start(self):
+        self.listener.start()
+
+    def stop(self):
+        self.listener.stop()
+        self.listener = mouse.Listener(on_click=self.on_click)

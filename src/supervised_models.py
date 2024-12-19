@@ -1,6 +1,5 @@
 from sklearn.ensemble import *
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neural_network import MLPClassifier
@@ -9,8 +8,6 @@ import os.path
 from sklearn.metrics import matthews_corrcoef
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-import matplotlib.pyplot as plt
-import numpy as np
 
 data_frame = pd.read_csv("training_batch.csv")
 labels = data_frame["abnormal activity"]
