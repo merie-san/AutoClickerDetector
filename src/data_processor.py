@@ -6,6 +6,7 @@ import threading
 import pynput
 import time
 
+
 class DataProcessor:
 
     def __init__(self, input_queue: Queue, output_queue: Queue, batch_dim):
@@ -56,7 +57,7 @@ class DataProcessor:
                 button = self.dict_pressed['button']
                 self.data_batch.append(
                     {'time': s_time, 'duration': duration, 'x': x, 'y': y, 'in-click mov': movement, 'button': button})
-                print("processor activity "+str(time.time()))
+                print("processor activity " + str(time.time()))
                 self.dict_pressed = None
                 self.dict_released = None
 
@@ -121,10 +122,15 @@ class DataProcessor:
                 std_y = math.sqrt(std_y / self.batch_dim)
                 std_d = math.sqrt(std_d / self.batch_dim)
 
+                batch_time = self.data_batch[0]['time']
                 self.data_batch = self.data_batch[self.batch_dim:]
 
-                self.output_queue.put(
-                    {"mean ttnc": mean_TTNC, "std ttnc": std_TTNC, "mean duration": mean_dur, "std duration": std_dur,
-                     "mean x": mean_x, "mean y": mean_y, "std x": std_x, "std y": std_y, "mean mov module": mean_mov_r,
-                     "mean mov angle": mean_mov_a, "std mov module": std_mov_r, "std mov angle": std_mov_a,
-                     "mean in-click distance": mean_d, "std in-click distance": std_d, "left click ratio": left_ratio})
+                self.output_queue.put([{"time": batch_time},
+                                       {"mean ttnc": mean_TTNC, "std ttnc": std_TTNC, "mean duration": mean_dur,
+                                        "std duration": std_dur,
+                                        "mean x": mean_x, "mean y": mean_y, "std x": std_x, "std y": std_y,
+                                        "mean mov module": mean_mov_r,
+                                        "mean mov angle": mean_mov_a, "std mov module": std_mov_r,
+                                        "std mov angle": std_mov_a,
+                                        "mean in-click distance": mean_d, "std in-click distance": std_d,
+                                        "left click ratio": left_ratio}])
