@@ -157,7 +157,7 @@ def dispatch(lag, n_clicks, radius, frequency, max_distance, speedup, autoclicke
     elif Key == 2:
         autoclicker.steady_clicks(pynput.mouse.Button.left, n_clicks, 1 / frequency)
     elif Key == 3:
-        autoclicker.quicker_clicks(pynput.mouse.Button.left, n_clicks, 1 / frequency, speedup)
+        autoclicker.quicker_clicks(pynput.mouse.Button.left, n_clicks, 1 / frequency, 1 / speedup)
     elif Key == 4:
         autoclicker.circumference_clicks(pynput.mouse.Button.left, n_clicks, radius, 1 / frequency)
     elif Key == 5:

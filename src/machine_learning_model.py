@@ -1,5 +1,5 @@
 import queue
-
+from sklearn.pipeline import Pipeline
 import pandas as pd
 import pickle
 from tkinter import *
@@ -20,8 +20,9 @@ class MachineLearningModel:
         self.data_dict = None
         self.model_thread = threading.Thread(target=self.predict_label)
         with open(pickled_model_file_path, "rb") as f, open(pickled_scaler_file_path, "rb") as g:
-            self.model = pickle.load(f)
-            self.scaler = pickle.load(g)
+            model = pickle.load(f)
+            scaler = pickle.load(g)
+            self.model = Pipeline([('scaler', scaler), ('model', model)])
 
     def start(self):
         self.should_stop = False
@@ -43,7 +44,6 @@ class MachineLearningModel:
                 continue
             data = pd.DataFrame.from_dict(self.data_dict, orient='index').T.to_numpy()
             self.data_dict = None
-            data = self.scaler.transform(data)
             prediction = self.model.predict(data)
             self.number_of_clicks.set(self.number_of_clicks.get() + self.data_batch_dim)
             print("model activity " + str(time.time()))
