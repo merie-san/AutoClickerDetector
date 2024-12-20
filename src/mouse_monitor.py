@@ -1,14 +1,12 @@
 import csv
 from queue import Queue
-
-import pynput
 from pynput import mouse
-import threading
 import time
 import tkinter
 
 
 class MouseMonitor:
+    """Monitors mouse click events"""
 
     def __init__(self, queue: Queue, n_clicks: tkinter.IntVar):
         self.queue = queue

@@ -6,10 +6,10 @@ import math
 from tkinter import ttk
 from tkinter import *
 import ctypes
-import tkinter as tk
 
 
 class AutoClicker:
+    """Implements a simple autoclicker"""
 
     def __init__(self):
         self.mouse = Controller()

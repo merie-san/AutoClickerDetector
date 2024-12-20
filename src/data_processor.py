@@ -1,6 +1,5 @@
 import queue
 from queue import Queue
-import csv
 import math
 import threading
 import pynput
@@ -8,6 +7,7 @@ import time
 
 
 class DataProcessor:
+    """Processes raw data into data batches for prediction"""
 
     def __init__(self, input_queue: Queue, output_queue: Queue, batch_dim):
         self.input_queue = input_queue

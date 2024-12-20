@@ -10,6 +10,7 @@ import csv
 
 
 class MachineLearningModel:
+    """Uses a sklearn model to predict labels of data batches"""
 
     def __init__(self, pickled_model_file_path, pickled_scaler_file_path, queue: Queue, number_of_clicks: IntVar,
                  autoclicker_activity: BooleanVar, data_batch_dim):
